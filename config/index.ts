@@ -1,1 +1,3 @@
-export const config = {};
+export const config = {
+  databaseUrl: process.env.DATABASE_URL as string,
+};
