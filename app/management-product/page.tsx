@@ -8,7 +8,7 @@ import { columns, ManagementProduct } from "./columns";
 import { Button } from "@/components/ui/button";
 import { ManagementProductTable } from "@/components/tables/ProductManagementTable";
 
-// import { Create } from "./create";
+import { Create } from "./create";
 
 async function getData(): Promise<ManagementProduct[]> {
   // Fetch data from your API here.
@@ -17,7 +17,7 @@ async function getData(): Promise<ManagementProduct[]> {
   Array.from({ length: 20 }, (_, i) => i + 1).forEach((i) => {
     data.push({
       id: String(i),
-      name: "produck ke" + i,
+      name: "produck ke - " + i,
       price: String(
         Math.floor(Math.random() * (1000000000 - 9999999999 + 1)) + 9999999999
       ),
@@ -40,7 +40,7 @@ export default async function ManagementUserPage() {
         <div className="flex justify-between items-center rounded-[1px]">
           <h3 className="font-medium text-lg">Management Produk</h3>
 
-          {/* <Create /> */}
+          <Create />
         </div>
         <div className="card">
           <ManagementProductTable columns={columns} data={data} />

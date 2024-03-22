@@ -2,12 +2,15 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 
-import { ArrowUpDown, Eye, NotebookPenIcon } from "lucide-react";
+import { ArrowUpDown, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+
 import Image from "next/image";
 
-// import { Edit } from "./edit";
+import { Edit } from "./edit";
+import { Delete } from "./delete";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -53,6 +56,10 @@ export const columns: ColumnDef<ManagementProduct>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const ProductData = row.original;
+      return <div className="font-bold">Rp{ProductData.price}</div>;
+    },
   },
   {
     accessorKey: "image",
@@ -70,7 +77,7 @@ export const columns: ColumnDef<ManagementProduct>[] = [
       const ProductData = props.row.original;
 
       return (
-        <div className="w-60 bg-transparent">
+        <div className="bg-transparent">
           <Image
             src={ProductData.image}
             alt=""
@@ -94,10 +101,25 @@ export const columns: ColumnDef<ManagementProduct>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const ProductData = row.original;
+      return (
+        <div className="flex text-center mx-auto">
+          <Badge
+            className={`font-bold text-white w-28 text-center ${
+              ProductData.status === "aktif" ? "bg-green-500" : "bg-red-500"
+            } `}
+            // variant={ProductData.status == "aktif" ? "outline" : "destructive"}
+          >
+            <span className="inline-block mx-auto">{ProductData.status}</span>
+          </Badge>
+        </div>
+      );
+    },
   },
   {
     id: "actions",
-    cell: ({ row }) => {
+    cell: ({ row, column }) => {
       const ProductData = row.original;
 
       const PropPassData = [
@@ -116,11 +138,12 @@ export const columns: ColumnDef<ManagementProduct>[] = [
       ];
 
       return (
-        <div className="flex justify-around items-center">
+        <div className="flex justify-center gap-6 items-center relative mx-auto overflow-hidden">
           <div className="bg-green-500 rounded-full p-2 inline-block cursor-pointer">
             <Eye className="text-white" />
           </div>
-          {/* <Edit props={PropPassData} /> */}
+          <Edit props={PropPassData} />
+          <Delete />
         </div>
       );
     },

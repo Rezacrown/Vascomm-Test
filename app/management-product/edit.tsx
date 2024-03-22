@@ -8,10 +8,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { NotebookPenIcon } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -29,7 +27,6 @@ export function Edit(data: PropsEditData) {
   );
 
   const handleChange = (e: any) => {};
-
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,12 +37,12 @@ export function Edit(data: PropsEditData) {
       <DialogContent className="sm:max-w-[425px]">
         {/*  */}
         <DialogHeader className="text-center mx-auto">
-          <DialogTitle>Ubah Data User</DialogTitle>
+          <DialogTitle>Edit Produk</DialogTitle>
         </DialogHeader>
         {/*  */}
         <div className="flex flex-col gap-5 my-5">
           {InputSection.map((item, idx) => {
-            let valueInput: any;
+            let valueInput;
 
             inputData.forEach((data, i) => {
               if (item.name === data.section) {
@@ -58,11 +55,11 @@ export function Edit(data: PropsEditData) {
                 <Label htmlFor={item.id} className="text-[#757575] text-[12px]">
                   {item.type == "file" ? (
                     <Image
-                      src={valueInput as string}
-                      alt={item.label}
+                      src={"/assets/icons/input-file-icon.png"}
+                      alt=""
                       width={500}
                       height={500}
-                      className="aspect-video w-60"
+                      className="aspect-video border-[0.3px] border-black"
                     />
                   ) : (
                     item.label
@@ -73,7 +70,8 @@ export function Edit(data: PropsEditData) {
                   name={item.name}
                   type={item.type}
                   placeholder={item.placeholder}
-                  defaultValue={valueInput}
+                  style={item.type == "file" ? { display: "none" } : {}}
+                  defaultValue={item.type == "file" ? "" : valueInput}
                   className="mt-2 placeholder:text-[#757575]"
                 />
               </div>
@@ -95,21 +93,21 @@ const InputSection = [
     id: "name",
     name: "name",
     type: "text",
-    placeholder: "Masukkan Nama Lengkap",
-    label: "Nama Lengkap",
+    placeholder: "Masukkan Nama Produk",
+    label: "Nama Produk",
   },
   {
-    id: "telp",
-    name: "telp",
-    type: "text",
-    placeholder: "Masukkan Nomor Telepon",
-    label: "No Telp",
+    id: "price",
+    name: "price",
+    type: "number",
+    placeholder: "Masukkan Harga Produk",
+    label: "Harga",
   },
   {
-    id: "email",
-    name: "email",
-    type: "email",
-    placeholder: "Masukkan Email",
-    label: "Email",
+    id: "image",
+    name: "image",
+    type: "file",
+    placeholder: "Masukkan Gambar Produk",
+    label: "Gambar",
   },
 ];

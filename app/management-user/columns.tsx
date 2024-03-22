@@ -7,6 +7,8 @@ import { ArrowUpDown, Eye, NotebookPenIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { Edit } from "./edit";
+import { Badge } from "@/components/ui/badge";
+import { Delete } from "./delete";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -79,6 +81,20 @@ export const columns: ColumnDef<ManagementUser>[] = [
         </Button>
       );
     },
+    cell: ({ row }) => {
+      const UserData = row.original;
+      return (
+        <div className="flex text-center mx-auto">
+          <Badge
+            className={`font-bold text-white w-28 text-center ${
+              UserData.status === "aktif" ? "bg-green-500" : "bg-red-500"
+            } `}
+          >
+            <span className="inline-block mx-auto">{UserData.status}</span>
+          </Badge>
+        </div>
+      );
+    },
   },
   {
     id: "actions",
@@ -106,6 +122,7 @@ export const columns: ColumnDef<ManagementUser>[] = [
             <Eye className="text-white" />
           </div>
           <Edit props={PropPassData} />
+          <Delete />
         </div>
       );
     },
