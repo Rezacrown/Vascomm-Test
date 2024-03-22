@@ -6,6 +6,7 @@ import SearchIcon from "@/public/assets/images/search-icon.svg";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import LogoBrand from "@/components/module/LogoBrand";
+import Link from "next/link";
 
 export default function HeaderSection() {
   return (
@@ -35,15 +36,19 @@ export default function HeaderSection() {
           {/* auth section */}
           <div className="">
             <div className="flex gap-x-[10px]">
-              <Button
-                variant={"outline"}
-                className="text-primary border border-primary rounded-[1px] px-[16px] py-[8px]"
-              >
-                Masuk
-              </Button>
-              <Button className="rounded-[1px] px-[16px] py-[8px]">
-                Daftar
-              </Button>
+              <Link href={"/login"}>
+                <Button
+                  variant={"outline"}
+                  className="text-primary border border-primary rounded-[1px] px-[16px] py-[8px]"
+                >
+                  Masuk
+                </Button>
+              </Link>
+              <Link href={"/register"}>
+                <Button className="rounded-[1px] px-[16px] py-[8px]">
+                  Daftar
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
