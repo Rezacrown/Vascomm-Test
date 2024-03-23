@@ -1,15 +1,16 @@
+// Impor PrismaClient dari paket @prisma/client
 import { PrismaClient } from "@prisma/client";
 
-const prismaClientSingleton = () => {
-  return new PrismaClient();
+// Buat variabel global bernama globalForPrisma untuk menyimpan instance Prisma Client
+// Ditipekan sebagai objek dengan properti prisma yang bisa berisi PrismaClient atau undefined
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
-declare global {
-  var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
-}
+// Ekspor konstanta prisma yang mencoba mengambil nilai dari globalForPrisma.prisma jika ada
+// Jika tidak ada, buat instance PrismaClient baru
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
-
-export default prisma;
-
-if (process.env.NODE_ENV !== "production") globalThis.prismaGlobal = prisma;
+// Di development, set ulang globalForPrisma.prisma ke instance prisma yang diekspor
+// Agar selalu dibuat instance baru saat di-import, bukan menggunakan instance global
+if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;

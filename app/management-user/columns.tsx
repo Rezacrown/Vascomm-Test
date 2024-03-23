@@ -13,18 +13,18 @@ import { Delete } from "./delete";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type ManagementUser = {
-  // no?: number;
+  no?: number;
   id: string;
   name: string;
   email: string;
   telp: string;
-  status: "aktif" | "tidak aktif";
+  status: "aktif" | "nonaktif";
   action?: any;
 };
 
 export const columns: ColumnDef<ManagementUser>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "no",
     header: "No.",
   },
   {
@@ -116,13 +116,15 @@ export const columns: ColumnDef<ManagementUser>[] = [
         },
       ];
 
+      // console.log(PropPassData);
+
       return (
         <div className="flex justify-around items-center">
           <div className="bg-green-500 rounded-full p-2 inline-block cursor-pointer">
             <Eye className="text-white" />
           </div>
-          <Edit props={PropPassData} />
-          <Delete />
+          <Edit props={PropPassData} data={userData} id={userData.id} />
+          <Delete id={userData.id} name={userData.name} />
         </div>
       );
     },

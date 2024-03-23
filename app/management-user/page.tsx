@@ -5,23 +5,37 @@ import DashboardProvider from "@/components/layouts/DashboardProvider";
 
 import { ManagementUserTable } from "@/components/tables/UserManagementTable";
 import { columns, ManagementUser } from "./columns";
-import { Button } from "@/components/ui/button";
+
+import { config } from "@/config";
 
 import { Create } from "./create";
+import { User } from "@prisma/client";
 
 async function getData(): Promise<ManagementUser[]> {
   // Fetch data from your API here.
+
+  const fetching = await fetch(`${config.baseUrl}/api/user`, {
+    method: "GET",
+    cache: "no-store",
+    next: {
+      // revalidate: false,
+    },
+  });
+
+  const user = (await fetching.json()) as any; // ResponseFormater<User[]>;
+
+  console.log(user);
+
   let data: ManagementUser[] = [];
 
-  Array.from({ length: 20 }, (_, i) => i + 1).forEach((i) => {
+  user.data.users.forEach((user: User, idx: number) => {
     data.push({
-      id: String(i),
-      name: "eza",
-      telp: String(
-        Math.floor(Math.random() * (1000000000 - 9999999999 + 1)) + 9999999999
-      ),
-      status: i % 2 == 0 ? "aktif" : "tidak aktif",
-      email: "m@example.com",
+      id: String(user.id),
+      no: idx + 1,
+      email: user.email,
+      name: user.name,
+      status: user.status,
+      telp: user.telp,
     });
   });
 

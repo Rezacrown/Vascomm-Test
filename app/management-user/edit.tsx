@@ -11,24 +11,71 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { config } from "@/config";
+import axios from "axios";
 
 import { NotebookPenIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ManagementUser } from "./columns";
+
+// type PropsEditData = {
+//   id: string;
+//   props: {
+//     section: string;
+//     data: string;
+//   }[];
+// };
 
 type PropsEditData = {
+  id: string;
+
+  data: ManagementUser;
+
   props: {
     section: string;
-    data: string | number;
+    data: string;
   }[];
 };
 
-export function Edit(data: PropsEditData) {
-  const [inputData, setinputData] = useState<(typeof data)["props"]>(
-    data.props
-  );
+type StatePayload = {
+  name: string;
+  email: string;
+  telp: string;
+};
 
-  const handleChange = (e: any) => {};
+export function Edit(data: PropsEditData) {
+  const [inputData] = useState<(typeof data)["props"]>(data.props);
+
+  const [payload, setPayload] = useState<StatePayload>({
+    name: "",
+    email: "",
+    telp: "",
+  });
+
+  const handleChange = async (e: React.FormEvent<HTMLInputElement>) => {
+    setPayload({ ...payload, [e.currentTarget.name]: e.currentTarget.value });
+  };
+
+  const handleSubmit = async () => {
+    await axios.put(`${config.baseUrl}/api/user`, payload, {
+      params: {
+        id: data.id,
+      },
+    });
+
+    window.location.reload();
+  };
+
+  useEffect(() => {
+    setPayload({
+      email: data.data.email,
+      name: data.data.name,
+      telp: data.data.telp,
+    });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Dialog>
@@ -48,13 +95,13 @@ export function Edit(data: PropsEditData) {
             let valueInput: any;
 
             inputData.forEach((data, i) => {
-              if (item.name === data.section) {
+              if (item.name == data.section) {
                 valueInput = data.data;
               }
             });
 
             return (
-              <div key={idx} className="">
+              <div key={`input-edit-${idx}`} className="">
                 <Label htmlFor={item.id} className="text-[#757575] text-[12px]">
                   {item.type == "file" ? (
                     <Image
@@ -74,6 +121,7 @@ export function Edit(data: PropsEditData) {
                   type={item.type}
                   placeholder={item.placeholder}
                   defaultValue={valueInput}
+                  onChange={handleChange}
                   className="mt-2 placeholder:text-[#757575]"
                 />
               </div>
@@ -81,7 +129,7 @@ export function Edit(data: PropsEditData) {
           })}
         </div>
         <DialogFooter className="w-full">
-          <Button className="w-full" type="submit">
+          <Button className="w-full" type="button" onClick={handleSubmit}>
             Simpan
           </Button>
         </DialogFooter>

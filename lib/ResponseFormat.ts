@@ -1,5 +1,5 @@
-export type ResponseFormater = {
+export type ResponseFormater<T = any> = {
   code: number;
   message: string;
-  data: any;
+  data: T;
 };

@@ -1,6 +1,8 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogFooter,
   DialogHeader,
@@ -9,8 +11,42 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { config } from "@/config";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+type StatePayload = {
+  name: string;
+  email: string;
+  telp: string;
+};
 
 export function Create() {
+  const [payload, setPayload] = useState<StatePayload>({
+    name: "",
+    email: "",
+    telp: "",
+  });
+
+  const handleChange = async (e: React.FormEvent<HTMLInputElement>) => {
+    setPayload({
+      ...payload,
+      [e.currentTarget.name]: e.currentTarget.value,
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const data = JSON.stringify(payload);
+
+    await fetch(`${config.baseUrl}/api/user`, {
+      method: "POST",
+      body: data,
+    });
+    window.location.reload();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -34,6 +70,7 @@ export function Create() {
                   name={item.name}
                   type={item.type}
                   placeholder={item.placeholder}
+                  onChange={handleChange}
                   className="mt-2 placeholder:text-[#757575]"
                 />
               </div>
@@ -41,9 +78,11 @@ export function Create() {
           })}
         </div>
         <DialogFooter className="w-full">
-          <Button className="w-full" type="submit">
-            Simpan
-          </Button>
+          <DialogClose onClick={handleSubmit} asChild>
+            <Button className="w-full" type="button">
+              Simpan
+            </Button>
+          </DialogClose>
         </DialogFooter>
       </DialogContent>
     </Dialog>
