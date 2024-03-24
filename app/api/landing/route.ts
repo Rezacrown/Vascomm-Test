@@ -13,6 +13,7 @@ export async function GET(req: Request) {
       where: {
         status: "aktif",
       },
+
       take: Number(take) || 10,
 
       select: {
@@ -23,10 +24,7 @@ export async function GET(req: Request) {
       },
     });
 
-    // search math products
-    const matchProducts = products.filter((prod) => {
-      return prod.name.match(searching as string);
-    });
+    // console.log(matchProduct);
 
     // for new products section
     const newProducts = await prisma.product.findMany({
@@ -48,7 +46,7 @@ export async function GET(req: Request) {
     const response: ResponseFormater = {
       code: 200,
       message: "scuccess get all products",
-      data: { products: matchProducts, newProducts },
+      data: { products: products, newProducts },
     };
 
     return Response.json(response);

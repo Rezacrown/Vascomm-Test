@@ -15,7 +15,7 @@ import {
 import axios from "axios";
 import { config } from "@/config";
 import { APiDashboardResponse } from "../api/dashboard/route";
-import { VerifyProvider } from "@/components/layouts/AuthProvider";
+import VerifyProvider from "@/components/layouts/AuthProvider/VerifyProvider";
 
 const getData = async () => {
   const res = await axios.get(`${config.baseUrl}/api/dashboard`);

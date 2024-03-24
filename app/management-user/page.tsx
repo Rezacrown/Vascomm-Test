@@ -10,7 +10,8 @@ import { config } from "@/config";
 
 import { Create } from "./create";
 import { User } from "@prisma/client";
-import { VerifyProvider } from "@/components/layouts/AuthProvider";
+
+import VerifyProvider from "@/components/layouts/AuthProvider/VerifyProvider";
 
 async function getData(): Promise<ManagementUser[]> {
   // Fetch data from your API here.
