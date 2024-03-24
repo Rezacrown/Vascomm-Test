@@ -11,11 +11,12 @@ import Image from "next/image";
 
 import { Edit } from "./edit";
 import { Delete } from "./delete";
+import { config } from "@/config";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type ManagementProduct = {
-  // no?: number;
+  no?: number;
   id: string;
   name: string;
   price: string;
@@ -26,7 +27,7 @@ export type ManagementProduct = {
 
 export const columns: ColumnDef<ManagementProduct>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "no",
     header: "No.",
   },
   {
@@ -79,7 +80,7 @@ export const columns: ColumnDef<ManagementProduct>[] = [
       return (
         <div className="bg-transparent">
           <Image
-            src={ProductData.image}
+            src={`${config.baseUrl}/${ProductData.image}`}
             alt=""
             width={100}
             height={100}
@@ -142,8 +143,8 @@ export const columns: ColumnDef<ManagementProduct>[] = [
           <div className="bg-green-500 rounded-full p-2 inline-block cursor-pointer">
             <Eye className="text-white" />
           </div>
-          <Edit props={PropPassData} />
-          <Delete />
+          <Edit props={PropPassData} data={ProductData} id={ProductData.id} />
+          <Delete id={ProductData.id} name={ProductData.name} />
         </div>
       );
     },

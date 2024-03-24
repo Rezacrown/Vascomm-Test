@@ -6,10 +6,20 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { config } from "@/config";
 import { DialogClose } from "@radix-ui/react-dialog";
+import axios from "axios";
 import { Trash2Icon } from "lucide-react";
 
-export function Delete() {
+export function Delete({ id, name }: { id: string; name: string }) {
+  const handleDelete = async () => {
+    await axios.delete(`${config.baseUrl}/api/product`, {
+      params: { id },
+    });
+
+    window.location.reload();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -30,7 +40,7 @@ export function Delete() {
         </div>
         <div className="pb-10 pt-5 text-center">
           <h3 className="font-bold">Konfirmasi Hapus</h3>
-          <p className="mt-3">Apakah kamu yakin menghapus “{"produk"}”?</p>
+          <p className="mt-3">Apakah kamu yakin menghapus “{name}”?</p>
         </div>
         <DialogFooter className="w-full p-4 border-t border-gray-200">
           <DialogClose>
@@ -38,7 +48,7 @@ export function Delete() {
               Batal
             </Button>
           </DialogClose>
-          <Button className="" variant={"destructive"}>
+          <Button onClick={handleDelete} className="" variant={"destructive"}>
             Hapus
           </Button>
         </DialogFooter>

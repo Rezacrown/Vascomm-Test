@@ -4,7 +4,11 @@ import { NextRequest } from "next/server";
 import { ResponseFormater } from "@/lib/ResponseFormat";
 import queryparse from "query-string";
 
-import { createUserValidation, deleteUserValidation } from "./validation";
+import {
+  createUserValidation,
+  deleteUserValidation,
+  UpdateUserValidation,
+} from "./validation";
 import { generateRandomPassword } from "@/lib/utils/generatePassword";
 
 // users get for admin crud
@@ -81,7 +85,7 @@ export async function DELETE(req: Request) {
   const { id } = queryparse.parse(search);
 
   try {
-    const validate = Number(id);
+    const validate = Number(deleteUserValidation.parse(id));
 
     const user = await prisma.user.delete({
       where: {
@@ -118,12 +122,14 @@ export async function PUT(req: Request) {
   const body = await req.json();
 
   try {
+    const validated = UpdateUserValidation.parseAsync(body);
+
     const user = await prisma.user.update({
       where: { id: Number(id) },
       data: {
-        name: body.name,
-        email: body.email,
-        telp: body.telp,
+        name: (await validated).name,
+        email: (await validated).email,
+        telp: (await validated).telp,
       },
     });
 

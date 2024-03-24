@@ -6,6 +6,14 @@ export const createUserValidation = z.object({
   email: z.string().email(),
 });
 
+export const UpdateUserValidation = z.object({
+  id: z.string(),
+
+  name: z.string(),
+  telp: z.string(),
+  email: z.string().email(),
+});
+
 export const deleteUserValidation = z.object({
   id: z.string(),
 });

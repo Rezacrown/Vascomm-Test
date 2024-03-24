@@ -1,4 +1,3 @@
-"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,21 +11,34 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { NotebookPenIcon } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+
+import axios from "axios";
+
+import { config } from "@/config";
 
 type PropsEditData = {
+  id: string;
+  data: any;
+
   props: {
     section: string;
     data: string | number;
   }[];
 };
 
-export function Edit(data: PropsEditData) {
-  const [inputData, setinputData] = useState<(typeof data)["props"]>(
-    data.props
-  );
+export function Edit({ data, id, props }: PropsEditData) {
+  const inputData = props;
 
-  const handleChange = (e: any) => {};
+  const handleUpdate = async (form: FormData) => {
+    await axios
+      .put(`${config.baseUrl}/api/product`, form, {
+        params: { id: id },
+      })
+      .catch((error) => console.log(error));
+
+    window.location.reload();
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -40,49 +52,54 @@ export function Edit(data: PropsEditData) {
           <DialogTitle>Edit Produk</DialogTitle>
         </DialogHeader>
         {/*  */}
-        <div className="flex flex-col gap-5 my-5">
-          {InputSection.map((item, idx) => {
-            let valueInput;
+        <form action={handleUpdate}>
+          <div className="flex flex-col gap-5 my-5">
+            {InputSection.map((item, idx) => {
+              let valueInput;
 
-            inputData.forEach((data, i) => {
-              if (item.name === data.section) {
-                valueInput = data.data;
-              }
-            });
+              inputData.forEach((data, i) => {
+                if (item.name === data.section) {
+                  valueInput = data.data;
+                }
+              });
 
-            return (
-              <div key={idx} className="">
-                <Label htmlFor={item.id} className="text-[#757575] text-[12px]">
-                  {item.type == "file" ? (
-                    <Image
-                      src={"/assets/icons/input-file-icon.png"}
-                      alt=""
-                      width={500}
-                      height={500}
-                      className="aspect-video border-[0.3px] border-black"
-                    />
-                  ) : (
-                    item.label
-                  )}
-                </Label>
-                <Input
-                  id={item.id}
-                  name={item.name}
-                  type={item.type}
-                  placeholder={item.placeholder}
-                  style={item.type == "file" ? { display: "none" } : {}}
-                  defaultValue={item.type == "file" ? "" : valueInput}
-                  className="mt-2 placeholder:text-[#757575]"
-                />
-              </div>
-            );
-          })}
-        </div>
-        <DialogFooter className="w-full">
-          <Button className="w-full" type="submit">
-            Simpan
-          </Button>
-        </DialogFooter>
+              return (
+                <div key={idx} className="">
+                  <Label
+                    htmlFor={item.id}
+                    className="text-[#757575] text-[12px]"
+                  >
+                    {item.type == "file" ? (
+                      <Image
+                        src={"/assets/icons/input-file-icon.png"}
+                        alt=""
+                        width={500}
+                        height={500}
+                        className="aspect-video border-[0.3px] border-black"
+                      />
+                    ) : (
+                      item.label
+                    )}
+                  </Label>
+                  <Input
+                    id={item.id}
+                    name={item.name}
+                    type={item.type}
+                    placeholder={item.placeholder}
+                    style={item.type == "file" ? { display: "none" } : {}}
+                    defaultValue={item.type == "file" ? "" : valueInput}
+                    className="mt-2 placeholder:text-[#757575]"
+                  />
+                </div>
+              );
+            })}
+          </div>
+          <DialogFooter className="w-full">
+            <Button className="w-full" type="submit">
+              Simpan
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
