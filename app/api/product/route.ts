@@ -45,7 +45,7 @@ export async function POST(req: Request) {
   const name = formData.get("name");
   const price = formData.get("price");
 
-  const image = formData.get("image") as string;
+  const image = formData.get("image") as File;
 
   console.log({ price, name, image });
 
@@ -53,12 +53,14 @@ export async function POST(req: Request) {
     //   validate body
     const validate = createProductValidation.parseAsync({ price, name, image });
 
+    const imageUrl = await uploadFile(image);
+
     // create product data by admin crud
     const product = await prisma.product.create({
       data: {
         name: (await validate).name,
         price: (await validate).price,
-        image: image,
+        image: imageUrl,
         status: "aktif",
       },
     });
@@ -75,7 +77,7 @@ export async function POST(req: Request) {
     console.log(err);
 
     const response: ResponseFormater = {
-      code: err || 500,
+      code: err.code || 500,
       message: err.message || "Internal Server Error",
       data: {},
     };
@@ -90,15 +92,26 @@ export async function DELETE(req: Request) {
   const { id } = queryparse.parse(search);
 
   try {
-    const product = await prisma.product.delete({
+    // soft delete
+    const product = await prisma.product.update({
       where: {
         id: Number(id),
       },
+      data: {
+        status: "nonaktif",
+      },
     });
 
-    if (fs.existsSync(join("public/", product.image))) {
-      fs.unlinkSync("public/" + product.image);
-    }
+    // for hard delete
+    // const product = await prisma.product.delete({
+    //   where: {
+    //     id: Number(id),
+    //   },
+    // });
+
+    // if (fs.existsSync(join("public/", product.image))) {
+    //   fs.unlinkSync("public/" + product.image);
+    // }
 
     const response: ResponseFormater = {
       code: 200,

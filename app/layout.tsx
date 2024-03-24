@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Poppins, Playfair_Display } from "next/font/google";
 
 import "./globals.css";
+import { NextAuthProvider } from "@/components/layouts/NextAuthProvider";
+import { authOptions } from "@/lib/nextauth";
+import { getServerSession } from "next-auth";
 
 const playfair_display = Playfair_Display({
   preload: false,
@@ -18,15 +21,17 @@ export const metadata: Metadata = {
   description: "Soal Test PT vascomm - lorem ipsum",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await getServerSession(authOptions);
+
   return (
     <html lang="en">
       <body className={`${playfair_display.className} ${poppin.className}`}>
-        {children}
+        <NextAuthProvider session={session}>{children}</NextAuthProvider>
       </body>
     </html>
   );

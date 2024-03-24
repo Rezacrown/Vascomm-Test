@@ -7,6 +7,7 @@ import {
   useReactTable,
   getSortedRowModel,
   SortingState,
+  getPaginationRowModel,
 } from "@tanstack/react-table";
 
 import {
@@ -18,6 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import React from "react";
+import { Button } from "@/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,6 +42,7 @@ export function ManagementUserTable<TData, TValue>({
     state: {
       sorting,
     },
+    getPaginationRowModel: getPaginationRowModel(),
   });
 
   return (
@@ -86,6 +89,25 @@ export function ManagementUserTable<TData, TValue>({
           )}
         </TableBody>
       </Table>
+      {/* paginate */}
+      <div className="flex items-center justify-end mx-14 space-x-2 py-4">
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          Previous
+        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          Next
+        </Button>
+      </div>
     </div>
   );
 }

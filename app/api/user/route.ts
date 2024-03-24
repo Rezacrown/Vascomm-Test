@@ -87,11 +87,27 @@ export async function DELETE(req: Request) {
   try {
     const validate = Number(deleteUserValidation.parse(id));
 
-    const user = await prisma.user.delete({
+    // soft delete
+    const user = await prisma.user.update({
       where: {
         id: validate,
       },
+      data: {
+        deleted: true,
+      },
+      select: {
+        name: true,
+        email: true,
+        Role: true,
+      },
     });
+
+    // for hard delete
+    // const user = await prisma.user.delete({
+    //   where: {
+    //     id: validate,
+    //   },
+    // });
 
     const response: ResponseFormater = {
       code: 201,

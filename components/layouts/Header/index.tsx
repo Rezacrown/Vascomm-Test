@@ -14,11 +14,14 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 export default function HeaderSection() {
   const router = useRouter();
   const queryParams = useSearchParams();
   const pathname = usePathname();
+
+  const session = useSession();
 
   const [search, setSearch] = useState("");
 
@@ -63,23 +66,34 @@ export default function HeaderSection() {
             </button>
           </div>
           {/* auth section */}
-          <div className="">
-            <div className="flex gap-x-[10px]">
-              <Link href={"/login"}>
-                <Button
-                  variant={"outline"}
-                  className="text-primary border border-primary rounded-[1px] px-[16px] py-[8px]"
-                >
-                  Masuk
+          {session.data?.user ? (
+            <div className="flex justify-between items-center gap-8">
+              <h3> hello, {session.data.user.name}</h3>
+              <div className="">
+                <Button onClick={() => signOut()} variant={"destructive"}>
+                  Logout
                 </Button>
-              </Link>
-              <Link href={"/register"}>
-                <Button className="rounded-[1px] px-[16px] py-[8px]">
-                  Daftar
-                </Button>
-              </Link>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="">
+              <div className="flex gap-x-[10px]">
+                <Link href={"/login"}>
+                  <Button
+                    variant={"outline"}
+                    className="text-primary border border-primary rounded-[1px] px-[16px] py-[8px]"
+                  >
+                    Masuk
+                  </Button>
+                </Link>
+                <Link href={"/register"}>
+                  <Button className="rounded-[1px] px-[16px] py-[8px]">
+                    Daftar
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

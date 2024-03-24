@@ -10,6 +10,7 @@ import { config } from "@/config";
 
 import { Create } from "./create";
 import { User } from "@prisma/client";
+import { VerifyProvider } from "@/components/layouts/AuthProvider";
 
 async function getData(): Promise<ManagementUser[]> {
   // Fetch data from your API here.
@@ -47,17 +48,19 @@ export default async function ManagementUserPage() {
   const data = await getData();
 
   return (
-    <DashboardProvider>
-      <div className="flex flex-col gap-10">
-        <div className="flex justify-between items-center rounded-[1px]">
-          <h3 className="font-medium text-lg">Management user</h3>
+    <VerifyProvider>
+      <DashboardProvider>
+        <div className="flex flex-col gap-10">
+          <div className="flex justify-between items-center rounded-[1px]">
+            <h3 className="font-medium text-lg">Management user</h3>
 
-          <Create />
+            <Create />
+          </div>
+          <div className="card">
+            <ManagementUserTable columns={columns} data={data} />
+          </div>
         </div>
-        <div className="card">
-          <ManagementUserTable columns={columns} data={data} />
-        </div>
-      </div>
-    </DashboardProvider>
+      </DashboardProvider>
+    </VerifyProvider>
   );
 }

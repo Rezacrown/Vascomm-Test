@@ -1,4 +1,4 @@
-"use server";
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,33 +11,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { config } from "@/config";
-import { uploadFile } from "@/lib/utils/uploadImage";
 import axios from "axios";
 import Image from "next/image";
 
-export async function Create() {
+export function Create() {
   const handleSubmit = async (form: FormData) => {
-    "use server";
-
-    const image = form.get("image") as File;
-
-    const name = form.get("name") as string;
-    const price = form.get("price") as string;
-
-    const url = await uploadFile(image);
-
-    // console.log(url);
-
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("price", price);
-    formData.append("image", url);
-
     await axios
-      .post(`${config.baseUrl}/api/product`, formData, {})
+      .post(`${config.baseUrl}/api/product`, form, {})
       .catch((error) => console.log(error));
 
-    // window.location.reload();
+    window.location.reload();
   };
 
   return (
