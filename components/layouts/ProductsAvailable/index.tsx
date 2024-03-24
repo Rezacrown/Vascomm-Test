@@ -1,11 +1,41 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { config } from "@/config";
+import { Product } from "@prisma/client";
+import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 export default function ProductsAvailable() {
-  const [moreList, setMoreList] = useState(10);
+  const query = useSearchParams();
+  const search = query.get("search");
+
+  const [take, setTake] = useState(10);
+  const [data, setData] = useState<Product[]>([]);
+
+  const fecthData = useCallback(async () => {
+    const { data } = await axios.get(
+      `${config.baseUrl}/api/landing?searching=${search}`,
+      {
+        params: { take: take },
+      }
+    );
+
+    const products = data.data.products;
+
+    setData(products);
+  }, [take, search]);
+
+  useEffect(() => {
+    fecthData();
+  }, [take, setTake, fecthData]);
+
+  useEffect(() => {
+    fecthData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="pt-16">
@@ -13,8 +43,8 @@ export default function ProductsAvailable() {
         Produk Tersedia
       </h3>
       <div className="grid grid-cols-5 gap-[10px]">
-        {DATA.map((item, index) => {
-          if (index + 1 <= moreList)
+        {data?.map((item, index) => {
+          if (index + 1 <= take)
             return (
               <Card
                 key={index}
@@ -26,7 +56,7 @@ export default function ProductsAvailable() {
                 style={{ height: "270px" }}
               >
                 <Image
-                  src={item.image}
+                  src={`${config.baseUrl}/${item.image}`}
                   alt="product"
                   height={370}
                   width={280}
@@ -45,14 +75,23 @@ export default function ProductsAvailable() {
         })}
       </div>
       <div className="mt-10 flex justify-center items-center">
-        {moreList >= DATA.length === false && (
+        {data.length >= take ? (
           <Button
             variant={"outline"}
             className="text-primary border-primary rounded-[1px] px-4 py-2"
-            onClick={() => setMoreList((prev) => prev + 10)}
+            onClick={() => setTake(take + 10)}
           >
             Lihat lebih banyak
           </Button>
+        ) : (
+          <div>
+            <h5
+              className="font-bold mx-auto
+            "
+            >
+              Data Product not Found
+            </h5>
+          </div>
         )}
       </div>
     </div>

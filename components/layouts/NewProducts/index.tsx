@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 
+// @ts-ignore
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,6 +10,7 @@ import Image from "next/image";
 
 import { Card } from "@/components/ui/card";
 import { NextArrow, PrevArrow } from "./arrow";
+import { config } from "@/config";
 
 type PropsData = {
   data: {
@@ -19,7 +21,7 @@ type PropsData = {
   }[];
 };
 
-export default function NewProducts() {
+export default function NewProducts({ data }: { data: any[] }) {
   const settings = {
     dots: false,
     infinite: false,
@@ -36,7 +38,7 @@ export default function NewProducts() {
       <div className="slider-container">
         <div className="">
           <Slider {...settings}>
-            {DATA.map((item, index) => {
+            {data.map((item, index) => {
               return (
                 <Card
                   key={index}
@@ -48,18 +50,18 @@ export default function NewProducts() {
                   style={{ height: "270px" }}
                 >
                   <Image
-                    src={item.image}
+                    src={`${config.baseUrl}/${item.image}`}
                     alt="product"
-                    height={370}
+                    height={280}
                     width={280}
-                    className="bg-cover h-[200px] w-[180px] object-fill object-center"
+                    className="bg-cover h-[200px] w-[180px] object-coverd object-center"
                   />
                   <div className="flex flex-col gap-1">
                     <h3 className="font-bold text-[#1F1C17] font-poppins">
                       {item.name}
                     </h3>
                     <h5 className="text-[#41A0E4] font-bold text-sm">
-                      IDR {String(item.price)}
+                      IDR {Number(item.price).toLocaleString("id-ID")}
                     </h5>
                   </div>
                 </Card>
