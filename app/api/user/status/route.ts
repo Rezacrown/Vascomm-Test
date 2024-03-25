@@ -39,6 +39,6 @@ export async function PUT(req: Request) {
       data: {},
     };
 
-    return response;
+    return Response.json(response);
   }
 }

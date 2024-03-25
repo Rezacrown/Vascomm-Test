@@ -49,6 +49,7 @@ export default async function ManagementUserPage() {
   const data = await getData();
 
   return (
+    // @ts-ignore
     <VerifyProvider>
       <DashboardProvider>
         <div className="flex flex-col gap-10">

@@ -4,6 +4,8 @@ import { NextRequest } from "next/server";
 import { ResponseFormater } from "@/lib/ResponseFormat";
 import queryparse from "query-string";
 
+import { transport } from "@/lib/mail/nodemailer";
+
 import {
   createUserValidation,
   deleteUserValidation,
@@ -46,6 +48,8 @@ export async function POST(req: Request) {
   try {
     const validate = createUserValidation.parseAsync(body);
 
+    const randomPassword = generateRandomPassword();
+
     // create user data by admin crud
     const user = await prisma.user.create({
       data: {
@@ -54,8 +58,16 @@ export async function POST(req: Request) {
         telp: (await validate).telp,
         status: "aktif",
         roleId: 2, // 2 for role user
-        password: generateRandomPassword(),
+        password: randomPassword,
       },
+    });
+
+    await transport.sendMail({
+      from: "vascommtest@rizkyrezaserver123.my.id",
+      to: user.email,
+      subject: "Your Password from server",
+      text: `This is a test email from Next.js with password: ${randomPassword}`,
+      html: `<h1>ini adalah passwordnya: ${randomPassword}</h1>`,
     });
 
     const response: ResponseFormater = {

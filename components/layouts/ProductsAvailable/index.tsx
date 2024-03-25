@@ -75,7 +75,7 @@ export default function ProductsAvailable() {
         })}
       </div>
       <div className="mt-10 flex justify-center items-center">
-        {data?.length >= take ? (
+        {data?.length >= take && (
           <Button
             variant={"outline"}
             className="text-primary border-primary rounded-[1px] px-4 py-2"
@@ -83,7 +83,8 @@ export default function ProductsAvailable() {
           >
             Lihat lebih banyak
           </Button>
-        ) : (
+        )}
+        {!data.length && (
           <div>
             <h5
               className="font-bold mx-auto

@@ -1,9 +1,9 @@
-import { transport } from "@/lib/mail/nodemailer";
 import { prisma } from "@/lib/prisma";
-import { ResponseFormater } from "@/lib/ResponseFormat";
-import { generateRandomPassword } from "@/lib/utils/generatePassword";
 
-export async function GET() {}
+import { ResponseFormater } from "@/lib/ResponseFormat";
+
+import { generateRandomPassword } from "@/lib/utils/generatePassword";
+import { transport } from "@/lib/mail/nodemailer";
 
 export async function POST(req: Request) {
   const { name, email, telp } = await req.json();
@@ -50,6 +50,6 @@ export async function POST(req: Request) {
       data: {},
     };
 
-    return response;
+    return Response.json(response);
   }
 }
