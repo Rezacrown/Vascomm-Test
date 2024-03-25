@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<h1>Test membuat project yang diberikan oleh PT.VASCOMM SOLUSI TEKNOLOGI</H1>
 
-## Getting Started
 
-First, run the development server:
+Dibangun menggunakan Fullstack Next Js Typescript dengan Prisma ORM sebagai koneksi ke database Mysql, mengimplementasikan OAuth2 Dengan menggunakan NextAuth Credential sebagai fitur untuk authenhitacionnya & juga menerapkan send email untuk passwordnya dengan menggunakan Nodemailer sebagai packcage untuk send emailnya.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+pada bagian Landingnya mengimplementasikan Fitur Search, Get More Product,serta Login & Register untuk user
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+pada bagian admin dashboard semua data user & product sudah ditampilkan secara dinamis dengan mengambil dari database
 
-## Learn More
+pada bagian management-product, disini admin bisa melakukan CRUD untuk Product yang diinginkan
 
-To learn more about Next.js, take a look at the following resources:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+pada bagian management-user, disini admin bisa menambahkan user, mengedit info user, mendelete user, dan men-aprove status user yang sedang nonaktif
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
+//
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Cara menjalankan Project,
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Git clone project ini
+
+2. "npm Install" pada direktori project ini diterminal
+
+3. jalankan perintah "npx prisma db seed" maka secara otomatis prisma akan membuat migrasi dan melakukan seeding data starter untuk role & user admin
+
+4. jalankan project menggunakan "npm run dev" ataupun "npm run start"
+
+
+Terimakasih sudah mau membaca🙂
