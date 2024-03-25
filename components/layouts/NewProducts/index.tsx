@@ -38,7 +38,7 @@ export default function NewProducts({ data }: { data: any[] }) {
       <div className="slider-container">
         <div className="">
           <Slider {...settings}>
-            {data.map((item, index) => {
+            {data?.map((item, index) => {
               return (
                 <Card
                   key={index}

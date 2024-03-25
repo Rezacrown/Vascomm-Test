@@ -10,7 +10,7 @@ import React, { useCallback, useEffect, useState } from "react";
 
 export default function ProductsAvailable() {
   const query = useSearchParams();
-  const search = query.get("search");
+  const search = query.get("search") || "";
 
   const [take, setTake] = useState(10);
   const [data, setData] = useState<Product[]>([]);
@@ -75,7 +75,7 @@ export default function ProductsAvailable() {
         })}
       </div>
       <div className="mt-10 flex justify-center items-center">
-        {data.length >= take ? (
+        {data?.length >= take ? (
           <Button
             variant={"outline"}
             className="text-primary border-primary rounded-[1px] px-4 py-2"

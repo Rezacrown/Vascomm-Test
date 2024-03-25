@@ -31,7 +31,7 @@ export default async function DashboardPage() {
   const cardOverview = [
     {
       name: "Jumlah User",
-      value: data.totalUser,
+      value: data.userTotal,
     },
     {
       name: "Jumlah User Aktif",
@@ -48,6 +48,7 @@ export default async function DashboardPage() {
   ];
 
   return (
+    // @ts-ignore
     <VerifyProvider>
       <DashboardProvider>
         <div className="flex flex-col gap-10">

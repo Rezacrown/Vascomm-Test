@@ -8,6 +8,7 @@ import { ManagementProductTable } from "@/components/tables/ProductManagementTab
 
 import { Create } from "./create";
 import { config } from "@/config";
+import VerifyProvider from "@/components/layouts/AuthProvider/VerifyProvider";
 
 async function getData(): Promise<ManagementProduct[]> {
   const res = await fetch(`${config.baseUrl}/api/product`, {
@@ -39,17 +40,19 @@ export default async function ManagementUserPage() {
   const data = await getData();
 
   return (
-    <DashboardProvider>
-      <div className="flex flex-col gap-10">
-        <div className="flex justify-between items-center rounded-[1px]">
-          <h3 className="font-medium text-lg">Management Produk</h3>
+    <VerifyProvider>
+      <DashboardProvider>
+        <div className="flex flex-col gap-10">
+          <div className="flex justify-between items-center rounded-[1px]">
+            <h3 className="font-medium text-lg">Management Produk</h3>
 
-          <Create />
+            <Create />
+          </div>
+          <div className="card">
+            <ManagementProductTable columns={columns} data={data} />
+          </div>
         </div>
-        <div className="card">
-          <ManagementProductTable columns={columns} data={data} />
-        </div>
-      </div>
-    </DashboardProvider>
+      </DashboardProvider>
+    </VerifyProvider>
   );
 }

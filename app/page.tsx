@@ -29,7 +29,7 @@ export default async function Home({
 }
 
 const getData = async ({ searching = "" }: { searching?: string }) => {
-  const { data } = await axios.get(`${config.baseUrl}/api/landing`, {
+  const { data } = await axios.get(`${config.baseUrl}/api/landing/newproduct`, {
     // params: { searching },
   });
 

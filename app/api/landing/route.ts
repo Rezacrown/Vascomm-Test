@@ -3,38 +3,30 @@ import { prisma } from "@/lib/prisma";
 import { ResponseFormater } from "@/lib/ResponseFormat";
 
 export async function GET(req: Request) {
-  const { search, searchParams } = new URL(req.url);
-  const { take } = queryparse.parse(search);
-
-  const searching = searchParams.get("searching");
-
   try {
+    const { search, searchParams } = new URL(req.url);
+    const { take } = queryparse.parse(search);
+
+    const searching = searchParams.get("searching") as string;
+
     const products = await prisma.product.findMany({
       where: {
-        status: "aktif",
+        AND: [
+          {
+            name: {
+              contains: searching,
+            },
+            status: "aktif",
+          },
+        ],
+        OR: [
+          {
+            status: "aktif",
+          },
+        ],
       },
-
       take: Number(take) || 10,
 
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        image: true,
-      },
-    });
-
-    // console.log(matchProduct);
-
-    // for new products section
-    const newProducts = await prisma.product.findMany({
-      where: {
-        status: "aktif",
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-      take: 10,
       select: {
         id: true,
         name: true,
@@ -46,8 +38,10 @@ export async function GET(req: Request) {
     const response: ResponseFormater = {
       code: 200,
       message: "scuccess get all products",
-      data: { products: products, newProducts },
+      data: { products },
     };
+
+    // console.log(response.data.products);
 
     return Response.json(response);
   } catch (err: any) {

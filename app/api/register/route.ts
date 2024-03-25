@@ -1,49 +1,55 @@
-// import { prisma } from "@/lib/prisma";
-// import { ResponseFormater } from "@/lib/ResponseFormat";
-// import { generateRandomPassword } from "@/lib/utils/generatePassword";
+import { config } from "@/config";
+import { transport } from "@/lib/mail/nodemailer";
+import { prisma } from "@/lib/prisma";
+import { ResponseFormater } from "@/lib/ResponseFormat";
+import { generateRandomPassword } from "@/lib/utils/generatePassword";
 
-// export async function GET() {}
+export async function GET() {}
 
-// export async function POST(req: Request) {
-//   const formData = await req.formData();
+export async function POST(req: Request) {
+  const { name, email, telp } = await req.json();
 
-//   console.log(formData);
+  try {
+    const randomPassword = generateRandomPassword(10);
 
-//   const name = formData.get("name");
-//   const email = formData.get("email");
-//   const telp = formData.get("telp");
+    const user = await prisma.user.create({
+      data: {
+        name: name as string,
+        password: randomPassword,
+        email: email as string,
+        telp: telp as string,
+        roleId: 2, // 2 for user role
+      },
+      select: {
+        name: true,
+        email: true,
+        telp: true,
+        status: true,
+      },
+    });
 
-//   console.log(email, telp, name);
+    const sending = await transport.sendMail({
+      from: "vascommtest@rizkyrezaserver123.my.id",
+      to: user.email,
+      subject: "Your Password from server",
+      text: `This is a test email from Next.js with password: ${randomPassword}`,
+      html: `<h1>ini adalah passwordnya: ${randomPassword}</h1>`,
+    });
 
-//   const randomPassword = generateRandomPassword(10);
+    const response: ResponseFormater = {
+      code: 201,
+      message: "User Created",
+      data: { user },
+    };
 
-//   console.log(randomPassword);
+    return Response.json(response);
+  } catch (err: any) {
+    const response: ResponseFormater = {
+      code: err.code || 500,
+      message: err.message || "Internal Server Error",
+      data: {},
+    };
 
-//   const user = await prisma.user.create({
-//     data: {
-//       name: name as string,
-//       password: randomPassword,
-//       email: email as string,
-//       telp: telp as string,
-//       roleId: 2, // 2 for user role
-//     },
-//     select: {
-//       name: true,
-//       email: true,
-//       telp: true,
-//       status: true,
-//     },
-//   });
-
-//   console.log(user);
-
-//   const response: ResponseFormater = {
-//     code: 201,
-//     message: "User Created",
-//     data: { user },
-//   };
-
-//   //   return "success";
-//   //   return Response.redirect("/login");
-//   return Response.json(response);
-// }
+    return response;
+  }
+}

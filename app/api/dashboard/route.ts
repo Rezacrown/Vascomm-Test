@@ -3,7 +3,7 @@ import { ResponseFormater } from "@/lib/ResponseFormat";
 import { Product } from "@prisma/client";
 
 export type APiDashboardResponse = {
-  totalUser: number;
+  userTotal: number;
   userActive: number;
   productActive: number;
   productTotal: number;
