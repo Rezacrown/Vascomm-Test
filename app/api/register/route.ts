@@ -1,4 +1,3 @@
-import { config } from "@/config";
 import { transport } from "@/lib/mail/nodemailer";
 import { prisma } from "@/lib/prisma";
 import { ResponseFormater } from "@/lib/ResponseFormat";
@@ -28,7 +27,8 @@ export async function POST(req: Request) {
       },
     });
 
-    const sending = await transport.sendMail({
+    // send email to show  user password
+    await transport.sendMail({
       from: "vascommtest@rizkyrezaserver123.my.id",
       to: user.email,
       subject: "Your Password from server",

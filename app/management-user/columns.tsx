@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Edit } from "./edit";
 import { Badge } from "@/components/ui/badge";
 import { Delete } from "./delete";
+import axios from "axios";
+import { config } from "@/config";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -83,11 +85,36 @@ export const columns: ColumnDef<ManagementUser>[] = [
     },
     cell: ({ row }) => {
       const UserData = row.original;
+
+      const handleApproveStatus = async () => {
+        if (UserData.status == "nonaktif") {
+          console.log("Approve Status");
+
+          await axios
+            .put(
+              `${config.baseUrl}/api/user/status`,
+              {
+                status: UserData.status,
+              },
+              {
+                params: { id: UserData.id },
+              }
+            )
+            .then(() => window.location.reload())
+            .catch((error) => console.log(error.message));
+        }
+      };
+
       return (
         <div className="flex text-center mx-auto">
           <Badge
+            key={UserData.id}
+            title={UserData.status == "nonaktif" ? "update status now" : ""}
+            onClick={handleApproveStatus}
             className={`font-bold text-white w-28 text-center ${
-              UserData.status === "aktif" ? "bg-green-500" : "bg-red-500"
+              UserData.status === "aktif"
+                ? "bg-green-500"
+                : "bg-red-500 cursor-pointer"
             } `}
           >
             <span className="inline-block mx-auto">{UserData.status}</span>

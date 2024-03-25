@@ -19,14 +19,6 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ManagementUser } from "./columns";
 
-// type PropsEditData = {
-//   id: string;
-//   props: {
-//     section: string;
-//     data: string;
-//   }[];
-// };
-
 type PropsEditData = {
   id: string;
 

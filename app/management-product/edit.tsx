@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,6 +16,7 @@ import Image from "next/image";
 import axios from "axios";
 
 import { config } from "@/config";
+import { useState } from "react";
 
 type PropsEditData = {
   id: string;
@@ -28,6 +30,8 @@ type PropsEditData = {
 
 export function Edit({ data, id, props }: PropsEditData) {
   const inputData = props;
+
+  const [currentImg, setCurrentImg] = useState<string | null>(null);
 
   const handleUpdate = async (form: FormData) => {
     await axios
@@ -71,7 +75,7 @@ export function Edit({ data, id, props }: PropsEditData) {
                   >
                     {item.type == "file" ? (
                       <Image
-                        src={"/assets/icons/input-file-icon.png"}
+                        src={currentImg || `${config.baseUrl}/${data.image}`}
                         alt=""
                         width={500}
                         height={500}
@@ -85,6 +89,15 @@ export function Edit({ data, id, props }: PropsEditData) {
                     id={item.id}
                     name={item.name}
                     type={item.type}
+                    onChange={(e) => {
+                      if (e.target.type == "file") {
+                        const currentImg = e.currentTarget.files![0];
+
+                        const url = URL.createObjectURL(currentImg);
+
+                        setCurrentImg(url);
+                      }
+                    }}
                     placeholder={item.placeholder}
                     style={item.type == "file" ? { display: "none" } : {}}
                     defaultValue={item.type == "file" ? "" : valueInput}

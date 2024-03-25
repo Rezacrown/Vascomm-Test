@@ -13,8 +13,11 @@ import { Label } from "@/components/ui/label";
 import { config } from "@/config";
 import axios from "axios";
 import Image from "next/image";
+import { useState } from "react";
 
 export function Create() {
+  const [imgPreview, setImgPreview] = useState<File | string | null>(null);
+
   const handleSubmit = async (form: FormData) => {
     await axios
       .post(`${config.baseUrl}/api/product`, form, {})
@@ -44,13 +47,17 @@ export function Create() {
                     className="text-[#757575] text-[12px]"
                   >
                     {item.type == "file" ? (
-                      <Image
-                        src={"/assets/icons/input-file-icon.png"}
-                        alt=""
-                        width={500}
-                        height={500}
-                        className="aspect-video border-[0.3px] border-black"
-                      />
+                      !imgPreview ? (
+                        <Image
+                          src={"/assets/icons/input-file-icon.png"}
+                          alt=""
+                          width={500}
+                          height={500}
+                          className="aspect-video border-[0.3px] border-black"
+                        />
+                      ) : (
+                        item.label
+                      )
                     ) : (
                       item.label
                     )}
@@ -59,6 +66,15 @@ export function Create() {
                     id={item.id}
                     name={item.name}
                     type={item.type}
+                    onChange={async (e) => {
+                      if (e.target.type == "file") {
+                        const currentImg = e.currentTarget.files![0];
+
+                        const url = URL.createObjectURL(currentImg);
+
+                        setImgPreview(url);
+                      }
+                    }}
                     placeholder={item.placeholder}
                     style={item.type == "file" ? { display: "none" } : {}}
                     className="mt-2 placeholder:text-[#757575]"
@@ -66,6 +82,16 @@ export function Create() {
                 </div>
               );
             })}
+            {/* img prev */}
+            {imgPreview && (
+              <Image
+                src={`${imgPreview}`}
+                alt=""
+                width={500}
+                height={500}
+                className="max-w-[250px] max-h-[250px]:"
+              />
+            )}
           </div>
           <DialogFooter className="w-full">
             <Button className="w-full" type="submit">
